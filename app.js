@@ -4,7 +4,14 @@ const path = require("path")
 
 require("dotenv").config()
 
-const port = process.env.PORT || 8081
+const bodyParser = require("body-parser")
+
+const cors = require("cors")
+
+const port = 8081
+
+app.use(bodyParser.json())
+app.use(cors())
 
 // connection
 const {connection} = require("./connection")
