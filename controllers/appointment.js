@@ -25,7 +25,7 @@ async function getAllAppointment(req, res) {
 
 async function singleAppointment(req, res) {
       try {
-        const id = req.params.id
+        const id = req.query.id
 
         const getSingleAppointment = await appointment.findById(id)
     
