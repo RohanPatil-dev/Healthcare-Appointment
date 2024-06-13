@@ -1,6 +1,15 @@
 const appointment = require("../model/appointment")
 
 async function insertAppointment(req, res) {
+    const body = req.body
+
+    const data = {
+        patient_id: body.patientId,
+        doctor_id: body.doctorId,
+        date: body.date,
+        status: "pending"
+    }
+
     try {
         const addAppointment = new appointment(req.body)
 
@@ -15,7 +24,7 @@ async function insertAppointment(req, res) {
 
 async function getAllAppointment(req, res) {
     try {
-        const allData = await appointment.find()
+        const allData = await appointment.find().sort({_id : -1})
 
         return res.json(allData)
     } catch (error) {
@@ -61,16 +70,35 @@ async function updateAppointment(req, res) {
         
     const id = req.params.id
 
-    const updateAppointment = await appointment.findByIdAndUpdate(id, req.body)
+    const {status} = req.body
+
+    const updateAppointment = await appointment.findByIdAndUpdate(id,{status},{new : true})
 
     if (!updateAppointment) {
         return res.json({ error: "Your selected query doesn't exist !" })
     }
 
     return res.json({ msg: updateAppointment })
+
+
      } catch (error) {
         return res.json({error : error})
      }
 }
 
-module.exports = { insertAppointment, getAllAppointment, singleAppointment, deleteAppointment, updateAppointment }
+
+async function getAppointmentsByPatientId(req, res){
+    const { patientId } = req.query; 
+    const result = await appointment.find({ patientId });
+    console.log(result);
+        return res.json({ status: 200, task: result });
+}
+
+async function getAppointmentsByDoctorId(req,res){
+    const { doctorId } = req.query; 
+    const result = await appointment.find({ doctorId });
+    console.log(result);
+        return res.json({ status: 200, task: result });
+}
+
+module.exports = { insertAppointment, getAllAppointment, singleAppointment, deleteAppointment, updateAppointment,getAppointmentsByPatientId,getAppointmentsByDoctorId }
