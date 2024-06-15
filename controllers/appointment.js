@@ -4,14 +4,14 @@ async function insertAppointment(req, res) {
     const body = req.body
 
     const data = {
-        patient_id: body.patientId,
-        doctor_id: body.doctorId,
+        patientId: body.patientId,
+        doctorId: body.doctorId,
         date: body.date,
         status: "pending"
     }
 
     try {
-        const addAppointment = new appointment(req.body)
+        const addAppointment = new appointment(data)
 
         await addAppointment.save()
 

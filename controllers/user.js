@@ -34,8 +34,8 @@ async function login(req,res){
 
     console.log(token);
     return res.json({msg : login,token : token})
-   } catch (error) {
-     return res.json({error : error})
+   } catch (err) {
+     return res.json({err : err})
    }
 }
 
