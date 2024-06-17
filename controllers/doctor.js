@@ -3,33 +3,36 @@ const doctor = require("../model/doctor")
 const { setUser } = require("../Services/services")
 
 async function docRegister(req, res) {
-    try {
-        const doctorResult = new doctor(req.body)
+  try {
+    const doctorResult = new doctor(req.body)
 
-        await doctorResult.save()
+    await doctorResult.save()
 
-        return res.json(doctorResult)
-    } catch (error) {
-        return res.json({ error: error })
-    }
+    return res.json(doctorResult)
+  } catch (error) {
+    return res.json({ error: error })
+  }
 }
 
 async function docLogin(req, res) {
-   try {
-    const { email, password } = req.body
+  const { email, password } = req.body
+
+  try {
 
     const docResult = await doctor.findOne({ email, password })
 
-    if (!docResult) {
-        return "Email or Password is incorrect !"
+    if (docResult) {
+      return res.json(docResult)
+    } else {
+      return res.json({ error: "Incorrect email and password !" })
     }
+  } catch (err) {
+    return res.json("server error")
+  }
 
-    const token = setUser(docResult)
 
-    return res.json({ msg: docResult, token: token })
-   } catch (error) {
-      return res.json({error : error})
-   }
+
+
 
 }
 
@@ -40,7 +43,7 @@ async function docAllData(req, res) {
 
     return res.json(getAllData)
   } catch (error) {
-    return res.json({error : error})
+    return res.json({ error: error })
   }
 }
 
