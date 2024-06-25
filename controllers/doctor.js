@@ -22,10 +22,13 @@ async function docLogin(req, res) {
     const docResult = await doctor.findOne({ email, password })
 
     if (docResult) {
-      return res.json(docResult)
-    } else {
-      return res.json({ error: "Incorrect email and password !" })
-    }
+      const token = setUser(docResult)
+      return res.json({success :true,token, doctorId:docResult._id,datas : {name : docResult.name,email : docResult.email,phoneNumber : docResult.phoneNumber,age : docResult.age}})
+  } else {
+      return res.json({
+          msg : "Invalid Email or Password",
+      })
+  };
   } catch (err) {
     return res.json("server error")
   }

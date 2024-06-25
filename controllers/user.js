@@ -24,15 +24,13 @@ async function login(req, res) {
         const login = await user.findOne({ email, password })
 
         if (login) {
-            return res.json(login)
+            const token = setUser(login)
+            return res.json({success :true,token, patientId:login._id,datas : {name : login.name,email : login.email,phoneNumber : login.phoneNumber,age : login.age}})
         } else {
             return res.json({
                 msg : "Invalid Email or Password",
             })
         };
-
-
-
     } catch (err) {
         return res.json({ msg: "server error" })
     }

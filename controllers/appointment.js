@@ -1,24 +1,41 @@
 const appointment = require("../model/appointment")
+const jwt = require("jsonwebtoken")
+const secret = "Rohan123504"
 
 async function insertAppointment(req, res) {
-    const body = req.body
 
-    const data = {
-        patientId: body.patientId,
-        doctorId: body.doctorId,
-        date: body.date,
-        status: "pending"
+    const token = req.headers["authorization"].split(" ")[1];
+    if (!token) {
+      return res.status(401).send({ message: "No token provided"});
     }
 
-    try {
-        const addAppointment = new appointment(data)
+    jwt.verify(token, secret, async (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: "Invalid token", success: false });
+          }
 
-        await addAppointment.save()
+          const body = req.body
 
-        return res.json({ msg: addAppointment })
-    } catch (error) {
-        return res.json({error : error})
-    }
+          const data = {
+              patientId: body.patientId,
+              doctorId: body.doctorId,
+              date: body.date,
+              status: "pending"
+          }
+      
+          try {
+              const addAppointment = new appointment(data)
+      
+              await addAppointment.save()
+      
+              return res.json({ msg: addAppointment })
+          } catch (error) {
+              return res.json({error : error})
+          }
+
+    })
+
+
 }
 
 
